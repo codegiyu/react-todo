@@ -6,7 +6,6 @@ export const TASKS_DATA = {
     todo: [
         {
             taskid: 1,
-            image: image1,
             title: "Highfidelity Design",
             desc: "Make clear design and color",
             progress: 0,
@@ -16,7 +15,6 @@ export const TASKS_DATA = {
         },
         {
             taskid: 2,
-            image: image1,
             title: "Usability Design",
             desc: "Make clear design and color",
             progress: 0,
@@ -28,7 +26,6 @@ export const TASKS_DATA = {
     ongoing: [
         {
             taskid: 3,
-            image: image2,
             title: "Highfidelity Design",
             desc: "Make clear design and color",
             progress: 3,
@@ -40,7 +37,6 @@ export const TASKS_DATA = {
     completed: [
         {
             taskid: 4,
-            image: image3,
             title: "Usability Design",
             desc: "Make clear design and color",
             progress: 9,
@@ -50,7 +46,6 @@ export const TASKS_DATA = {
         },
         {
             taskid: 5,
-            image: image3,
             title: "Highfidelity Design",
             desc: "Make clear design and color",
             progress: 10,

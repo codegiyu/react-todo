@@ -1,15 +1,14 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { TASKS_DATA } from "../../data/props";
 
 
 const useTasksStore = create(
     persist((set, get) => ({
-        tasks: TASKS_DATA,
+        tasks: {todo: [], completed: []},
         nextId: () => {
             let tasks = get().tasks
 
-            return tasks.todo.length + tasks.ongoing.length + tasks.completed.length + 1
+            return tasks.todo.length + tasks.completed.length + 1
         },
         setTasks: (obj) => set(() => (
             { tasks: obj }

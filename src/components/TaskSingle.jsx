@@ -1,13 +1,9 @@
 import { Draggable } from "react-beautiful-dnd";
 import dots from "../assets/icons/dots-vertical.svg";
-import list from "../assets/icons/list-checks.svg";
-import chat from "../assets/icons/chat.svg";
-import link from "../assets/icons/link.svg";
-import ImageStack from "./ImageStack";
 import useAlertStore from "../store/zustand/alertStore";
 
 const TaskSingle = ({ taskProps }) => {
-    const { taskid, index, image, title, desc, progress, messages, links, imageIsActive, progressChangeHandler, handleFocus, status } = taskProps
+    const { taskid, index, title, desc, progress, progressChangeHandler, status } = taskProps
 
     const setAlert = useAlertStore(state => state.setAlert)
 
@@ -23,26 +19,18 @@ const TaskSingle = ({ taskProps }) => {
         progressChangeHandler(newProgress, id, status)
     }
 
-    const focusHandler = (e) => {
-        handleFocus(e)
-    }
-
     return (
         <Draggable draggableId={String(taskid)} index={index}>
             {
                 (provided) => (
-                    <div className="w-full bg-white rounded-xl p-4 shadow-taskCard transition-all duration-300 ease"
+                    <div 
+                        className={`w-full rounded-xl p-4 shadow-taskCard transition-all duration-300 ease 
+                        ${ status === "todo" ? "bg-[#0000FF15]" : "bg-[#FF000015]" }`}
                         {...provided.draggableProps}
                         { ...provided.dragHandleProps }
                         ref={provided.innerRef}
                     >
-                        { imageIsActive ? (
-                            <figure className="w-full transition-all duration-300 ease pb-[1.125rem]">
-                                <img src={ image } alt="" className="w-full h-[10.5rem] object-cover" />
-                            </figure>
-                        ) : null }
-
-                        <div onClick={focusHandler} id={taskid} className="w-full flex items-start gap-4 mb-[1.125rem]">
+                        <div id={taskid} className="w-full flex items-start gap-4">
                             <div className="flex flex-col gap-2 flex-1">
                                 <h3 className="text-[1rem] leading-[120%] text-black font-semibold">
                                     { title }
@@ -59,15 +47,15 @@ const TaskSingle = ({ taskProps }) => {
                         </div>
 
                         <div className="w-full grid gap-2">
-                            <div className="w-full flex justify-between">
+                            {/* <div className="w-full flex justify-between">
                                 <div className="w-fit flex gap-1 items-center">
                                     <img src={ list } alt="" className="w-[1.125rem]" />
                                     <p className="text-[0.875rem] leading-[120%] text-greyText">Progress</p>
                                 </div>
                                 <p className="text-[0.875rem] leading-[120%] text-black font-medium">{`${progress}/10`}</p>
-                            </div>
+                            </div> */}
 
-                            <div onClick={ handleChangeProgress } data-id={taskid} data-status={status}
+                            {/* <div onClick={ handleChangeProgress } data-id={taskid} data-status={status}
                                 className="w-full h-2 bg-[#EBEBEB] rounded relative overflow-hidden cursor-pointer"
                             >
                                 <span style={{ width: progressWidth }} 
@@ -87,7 +75,7 @@ const TaskSingle = ({ taskProps }) => {
                                     </div>
                                 </div>
                                 <ImageStack stackProps={{ bigSize: false }} />
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 )
