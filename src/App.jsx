@@ -8,7 +8,6 @@ import helpers from "./helpers";
 import { useState } from "react";
 import useTasksStore from "./store/zustand/tasksStore";
 import { useEffect } from "react";
-import Slide from "react-reveal/Slide";
 
 function App() {
   const defaultTasksStore = {todo:[],completed:[]}
@@ -38,8 +37,20 @@ function App() {
     let changedTask = newTasks[source.droppableId].splice(source.index, 1)[0]
     changedTask.status = destination.droppableId
 
-    newTasks[destination.droppableId].splice(destination.index, 0, changedTask)
-    
+    if (source.droppableId === "completed" && destination.droppableId === "todo") {
+      let id = 0;
+
+      for (id; id < newTasks["todo"].length; id++) {
+          console.log(id, newTasks["todo"][id])
+          if (newTasks["todo"][id].datetime > changedTask.datetime) {
+              break;
+          }
+      }
+
+      newTasks["todo"].splice(id, 0, changedTask)
+    } else {
+      newTasks[destination.droppableId].splice(destination.index, 0, changedTask)  
+    }
     setTasks(newTasks)
     setAppTasks(JSON.parse(localStorage.getItem("tasks-storage") || stringifiedDefaultTasksStore))
 
@@ -82,30 +93,26 @@ function App() {
               <section className={`w-full flex lg:hidden shadow-xl rounded-lg overflow-hidden mb-16`}>
                 <button 
                   onClick={() => setTodoTabActive(true)}
-                  className={`w-1/2 p-4 bg-[#0000FF] font-semibold ${todoTabActive ? "" : "shadow-inner opacity-40"}`}>
+                  className={`w-1/2 p-4 bg-[#0000FF] font-semibold ${todoTabActive ? "" : "shadow-inner opacity-20"}`}>
                   Todo
                 </button>
                 <button
                   onClick={() => setTodoTabActive(false)} 
-                  className={`w-1/2 p-4 bg-[#FF0000] font-semibold ${todoTabActive ? "shadow-inner opacity-40" : ""}`}>
+                  className={`w-1/2 p-4 bg-[#FF0000] font-semibold ${todoTabActive ? "shadow-inner opacity-20" : ""}`}>
                   Completed
                 </button>
               </section>
 
-              <div className="w-full flex lg:hidden gap-5 lg:gap-4 xl:gap-10">
-                <Slide left when={todoTabActive}>
+              <div className="w-full flex lg:hidden gap-5 lg:gap-4 xl:gap-10 relative">
                   <section className={`w-full flex-none lg:flex-1 ${todoTabActive ? "" : "hidden"}`}>
                     <SectionHeading headingProps={{ title: "To Do", count: tasks.todo?.length || 0, background: "#0000FF" }} />
                     <TaskList taskProps={{ tasksArray: tasks.todo, listName: "todo" }} />
                     <AddTaskBtn btnProps={{ status: "todo" }} />
                   </section>
-                </Slide>
-                <Slide right when={!todoTabActive}>
-                  <section className={`w-full flex-none lg:flex-1 ${!todoTabActive ? "" : "hidden"}`}>
+                  <section className={`w-full flex-none lg:flex-1 ${!todoTabActive ? "" : "hidden"} `}>
                     <SectionHeading headingProps={{ title: "Completed", count: tasks.completed?.length || 0, background: "#FF0000" }} />
                     <TaskList taskProps={{ tasksArray: tasks.completed, listName: "completed" }} />
                   </section>
-                </Slide>
               </div>
 
               <div className="w-full hidden lg:grid grid-cols-2 gap-5 lg:gap-4 xl:gap-10">

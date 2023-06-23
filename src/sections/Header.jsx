@@ -35,7 +35,7 @@ const Header = () => {
             <section onClick={ handleClickOutsideMenu } className={`w-full h-screen bg-[#00000099] fixed top-0 left-0 transition-all duration-300 z-[100]
                 ${menuIsOpen ? "translate-x-0" : "translate-x-[-101vw]"}`}
             >
-                <section ref={ menuRef } className="w-[300px] h-full bg-purple text-white py-[1.375rem] px-8 flex flex-col gap-8 justify-between">
+                <section ref={ menuRef } className="w-[300px] h-full bg-purple text-white pt-[1.375rem] pb-10 px-8 flex flex-col gap-8 justify-between">
                     <div className="aside-top w-full">
                         <div className="w-full flex justify-end pb-6">
                             <button onClick={ handleCloseMenu } className="bg-transparent">

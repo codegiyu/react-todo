@@ -45,11 +45,20 @@ const NewTaskModal = () => {
         let newTask = {
             taskid: nextID(),
             title,
-            datetime: helpers.formatDateTime(datetime),
+            datetime: new Date(datetime).getTime(),
             status: modalType
         }
         
-        allTasks[modalType].push(newTask)
+        let id = 0;
+
+        for (id; id < allTasks[modalType].length; id++) {
+            console.log(id, allTasks[modalType][id])
+            if (allTasks[modalType][id].datetime > newTask.datetime) {
+                break;
+            }
+        }
+
+        allTasks[modalType].splice(id, 0, newTask)
         formRef.current.reset()
         setFormValues({ title: "", datetime: "" })
         setTasks(allTasks)

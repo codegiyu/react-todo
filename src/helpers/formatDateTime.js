@@ -1,5 +1,5 @@
 const formatDateTime = (str) => {
-    const datetime = new Date(str)
+    const datetime = new Date(Number(str))
     const date = datetime.toLocaleDateString()
     const timeAll = datetime.toLocaleTimeString()
     const time = timeAll.slice(0, -6)
