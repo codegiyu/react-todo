@@ -1,11 +1,5 @@
 import plus from "../assets/icons/plus-white.svg";
 import lightning from "../assets/icons/lightning-purple.svg";
-import dashboard from "../assets/icons/dashboard.svg";
-import settings from "../assets/icons/settings.svg";
-import lightningWhite from "../assets/icons/lightning-white.svg";
-import users from "../assets/icons/users.svg";
-import userAdd from "../assets/icons/user-add.svg";
-import affiliate from "../assets/icons/affiliate.svg";
 import Alert from "../components/Alert";
 import Header from "../sections/Header";
 import NewTaskModal from "../components/NewTaskModal";
@@ -34,7 +28,7 @@ const Layout = (props) => {
                 <div className="aside-top w-full">
                     <div className="w-full bg-[#45269C] rounded-lg py-3 flex items-center justify-center gap-2">
                         <img src={ lightning } alt="" className="w-[1.375rem]" />
-                        <span className="text-[1rem] leading-[120%]">Welcome Keerthi</span>
+                        <span className="text-[1rem] leading-[120%]">Hi User 👋</span>
                     </div>
                 </div>
                 <button type="button" onClick={addTaskHandler} className="w-full bg-lightPurple rounded-lg py-4 flex items-center 

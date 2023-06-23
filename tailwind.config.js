@@ -12,10 +12,10 @@ module.exports = {
       colors: {
         purple: "#1D1042",
         lightPurple: "#703EFE",
-        greyText: "#B8B9BD",
+        greyText: "#1a1b1c" ||  "#B8B9BD",
         grey: "#7D8088",
         green: "#8BC488",
-        orange: "#FF5F37",
+        orange: "#FB5F37",
         lightOrange: "#F89D4B"
       },
       fontFamily: {

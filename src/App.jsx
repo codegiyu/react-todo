@@ -4,21 +4,29 @@ import { DragDropContext } from "react-beautiful-dnd";
 import TaskList from "./components/TaskList";
 import AddTaskBtn from "./components/AddTaskBtn";
 import useAlertStore from "./store/zustand/alertStore";
+import helpers from "./helpers";
+import { useState } from "react";
 import useTasksStore from "./store/zustand/tasksStore";
+import { useEffect } from "react";
+import Slide from "react-reveal/Slide";
 
 function App() {
-  const tasks = useTasksStore(state => state.tasks)
-  const setTasks = useTasksStore(state => state.setTasks)
-  const changeTaskProgress = useTasksStore(state => state.changeTaskProgress)
+  const defaultTasksStore = {todo:[],completed:[]}
+  const stringifiedDefaultTasksStore = JSON.stringify(defaultTasksStore)
+
+  const [tasks, setAppTasks] = useState(JSON.parse(localStorage.getItem("tasks-storage") || stringifiedDefaultTasksStore))
+  const [todoTabActive, setTodoTabActive] = useState(true)
+  const setTasks = helpers.setTasks
+  const resetTasks = helpers.resetTasks
 
   const setAlert = useAlertStore(state => state.setAlert)
 
-  const progressChangeHandler = (num, id, status) => {
-    changeTaskProgress(num,id,status)
-  }
+  const totalTasks = useTasksStore(state => state.totalTasks)
+  console.log(localStorage.getItem("tasks-storage"), totalTasks)
 
-  const addMemberhandler = () => {
-    setAlert({ type: "warning", message: "Sorry, this feature is not available yet!" })
+  const resetTodos = () => {
+    resetTasks()
+    setAppTasks(JSON.parse(localStorage.getItem("tasks-storage") || stringifiedDefaultTasksStore))
   }
 
   const onDragEnd = (result) => {
@@ -30,21 +38,11 @@ function App() {
     let changedTask = newTasks[source.droppableId].splice(source.index, 1)[0]
     changedTask.status = destination.droppableId
 
-    if (destination.droppableId === "todo" && changedTask.progress > 0) {
-      changedTask.progress = 0
-    }
-
-    if (destination.droppableId === "ongoing" && changedTask.progress > 8) {
-      changedTask.progress = 8
-    }
-
-    if (destination.droppableId === "completed" && changedTask.progress < 9) {
-      changedTask.progress = 9
-    }
-
     newTasks[destination.droppableId].splice(destination.index, 0, changedTask)
     
     setTasks(newTasks)
+    setAppTasks(JSON.parse(localStorage.getItem("tasks-storage") || stringifiedDefaultTasksStore))
+
     if (source.droppableId !== destination.droppableId) {
       setAlert({ 
         type: "success",
@@ -53,6 +51,10 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    setAppTasks(JSON.parse(localStorage.getItem("tasks-storage") || stringifiedDefaultTasksStore))
+  }, [totalTasks, stringifiedDefaultTasksStore])
+  
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Layout>
@@ -64,32 +66,57 @@ function App() {
                   Todos
                 </h1>
                 <p className="text-greyText text-[0.875rem] leading-[120%]">
-                  A new campaign launch work for brand new feature in May month
+                  Create and manage your tasks for the day
                 </p>
               </div>
+              <button 
+                type="button" 
+                onClick={ resetTodos } 
+                className="w-fit bg-black hover:bg-[#FF0000] hover:scale-105 rounded-lg mr-auto md:mr-0 py-3 px-[1.8rem] active:scale-95"
+              >
+                <span className="text-[0.875rem] leading-[120%]">Reset Todos</span>
+              </button>
             </div>
           </section>
           <section className="w-full h-max bg-[#FCFBFC] px-5 lg:px-6 xl:px-16 pt-16 pb-20">
-              <div className="w-full grid md:grid-cols-2 gap-16 lg:gap-4 xl:gap-10">
-                <section className="w-full">
-                  <SectionHeading headingProps={{ title: "To Do", count: tasks.todo.length, background: "#0000FF" }} />
-                  <TaskList taskProps={{
-                    tasksArray: tasks.todo.map(task => {
-                      task.progressChangeHandler = progressChangeHandler
-                      return task
-                    }),
-                    listName: "todo" }}
-                  />
+              <section className={`w-full flex lg:hidden shadow-xl rounded-lg overflow-hidden mb-16`}>
+                <button 
+                  onClick={() => setTodoTabActive(true)}
+                  className={`w-1/2 p-4 bg-[#0000FF] font-semibold ${todoTabActive ? "" : "shadow-inner opacity-40"}`}>
+                  Todo
+                </button>
+                <button
+                  onClick={() => setTodoTabActive(false)} 
+                  className={`w-1/2 p-4 bg-[#FF0000] font-semibold ${todoTabActive ? "shadow-inner opacity-40" : ""}`}>
+                  Completed
+                </button>
+              </section>
+
+              <div className="w-full flex lg:hidden gap-5 lg:gap-4 xl:gap-10">
+                <Slide left when={todoTabActive}>
+                  <section className={`w-full flex-none lg:flex-1 ${todoTabActive ? "" : "hidden"}`}>
+                    <SectionHeading headingProps={{ title: "To Do", count: tasks.todo?.length || 0, background: "#0000FF" }} />
+                    <TaskList taskProps={{ tasksArray: tasks.todo, listName: "todo" }} />
+                    <AddTaskBtn btnProps={{ status: "todo" }} />
+                  </section>
+                </Slide>
+                <Slide right when={!todoTabActive}>
+                  <section className={`w-full flex-none lg:flex-1 ${!todoTabActive ? "" : "hidden"}`}>
+                    <SectionHeading headingProps={{ title: "Completed", count: tasks.completed?.length || 0, background: "#FF0000" }} />
+                    <TaskList taskProps={{ tasksArray: tasks.completed, listName: "completed" }} />
+                  </section>
+                </Slide>
+              </div>
+
+              <div className="w-full hidden lg:grid grid-cols-2 gap-5 lg:gap-4 xl:gap-10">
+                <section className="w-full flex-none lg:flex-1">
+                  <SectionHeading headingProps={{ title: "To Do", count: tasks.todo?.length || 0, background: "#0000FF" }} />
+                  <TaskList taskProps={{ tasksArray: tasks.todo, listName: "todo" }} />
                   <AddTaskBtn btnProps={{ status: "todo" }} />
                 </section>
-                <section>
-                  <SectionHeading headingProps={{ title: "Completed", count: tasks.completed.length, background: "#FF0000" }} />
-                  <TaskList taskProps={{
-                    tasksArray: tasks.completed.map(task => {
-                      task.progressChangeHandler = progressChangeHandler
-                      return task
-                    }),
-                    listName: "completed" }} />
+                <section className="w-full flex-none lg:flex-1">
+                  <SectionHeading headingProps={{ title: "Completed", count: tasks.completed?.length || 0, background: "#FF0000" }} />
+                  <TaskList taskProps={{ tasksArray: tasks.completed, listName: "completed" }} />
                 </section>
               </div>
           </section>

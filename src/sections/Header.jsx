@@ -2,12 +2,6 @@ import { useRef, useState } from "react";
 import { IoClose, IoMenu } from "react-icons/io5";
 import plus from "../assets/icons/plus-white.svg";
 import lightning from "../assets/icons/lightning-purple.svg";
-import dashboard from "../assets/icons/dashboard.svg";
-import settings from "../assets/icons/settings.svg";
-import lightningWhite from "../assets/icons/lightning-white.svg";
-import users from "../assets/icons/users.svg";
-import userAdd from "../assets/icons/user-add.svg";
-import affiliate from "../assets/icons/affiliate.svg";
 import useModalStore from "../store/zustand/modalStore";
 
 const Header = () => {
@@ -50,7 +44,7 @@ const Header = () => {
                         </div>
                         <div className="w-full bg-[#45269C] rounded-lg py-3 flex items-center justify-center gap-2">
                             <img src={ lightning } alt="" className="w-[1.375rem]" />
-                            <span className="text-[1rem] leading-[120%]">Welcome Keerthi</span>
+                            <span className="text-[1rem] leading-[120%]">Hi User 👋</span>
                         </div>
                     </div>
                     <button type="button" onClick={addTaskHandler} className="w-full bg-lightPurple rounded-lg py-4 flex items-center

@@ -4,27 +4,14 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 const useTasksStore = create(
     persist((set, get) => ({
-        tasks: {todo: [], completed: []},
-        nextId: () => {
-            let tasks = get().tasks
-
-            return tasks.todo.length + tasks.completed.length + 1
-        },
-        setTasks: (obj) => set(() => (
-            { tasks: obj }
-        )),
-        changeTaskProgress: (num, id, status) => {
-            const obj = { ...get().tasks }
-            const arr = obj[status]
-            const index = arr.findIndex(item => item.taskid === Number(id))
-            const newTask = { ...arr[index], progress: num }
-            arr[index] = newTask
-            
-            return set(() => ({ tasks: obj }))
+        totalTasks: 0,
+        changeTotalTasks: () => {
+            let total = get().totalTasks
+            set(() => ({ totalTasks: ++total }))
         }
     }),
     {
-        name: "tasks-storage",
+        name: "tasks-total-manager",
         storage: createJSONStorage(() => localStorage)
     }
 ))
